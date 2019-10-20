@@ -1,5 +1,6 @@
 package com.example.walk_inclinic;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,11 +14,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void btnCreateClick(View view){
+    public void btnRoleClick(View view){
 
     }
 
-    public void btnRoleClick(View view){
-
+    public void btnCreateClick(View view){
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(intent);
     }
 }
