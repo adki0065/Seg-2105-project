@@ -1,11 +1,13 @@
 package com.example.segproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -122,8 +125,20 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, hash);
 
                         if (hash.equals(checkHash)) {
-                            // TODO: Remove snackbar and go to next activity
-                            ShowSnackbar(activityView, "Logged in.");
+//                            ShowSnackbar(activityView, "Logged in.");
+
+                            //Creating a Return intent to pass to the Main Activity
+                            Intent returnIntent = new Intent(MainActivity.this, LoggedInActivity.class);
+                            //Adding stuff to the return intent
+                            HashMap<String, String> hashMap = new HashMap<String, String>();
+
+                            hashMap.put("name", document.getString("name"));
+                            hashMap.put("role", document.getString("role"));
+                            hashMap.put("username", document.getString("username"));
+
+                            returnIntent.putExtra("user", hashMap);
+
+                            startActivity(returnIntent);
                         } else {
                             ShowSnackbar(activityView, "Incorrect username or password.");
                         }
