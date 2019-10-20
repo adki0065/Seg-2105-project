@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : result) {
                         String checkHash = document.get("password").toString().trim();
 
-                        String hash = Base64.encodeToString(digest.digest(password.getBytes()), Base64.DEFAULT).trim();
+                        String hash = Base64.encodeToString(digest.digest(password.trim().getBytes()), Base64.DEFAULT).trim();
 
                         Log.d(TAG, checkHash);
                         Log.d(TAG, hash);
