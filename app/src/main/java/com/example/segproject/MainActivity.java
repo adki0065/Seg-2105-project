@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
 //        }
     }
 
-    private void CreateAccount() {
-
+    public void OnRegisterPress(View view) {
+        Intent returnIntent = new Intent(MainActivity.this, RegisterActivity.class);
+        startActivity(returnIntent);
     }
 
     public void OnLoginPress(View view) {
@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // TODO: Make ShowSnackbar a public method accessible by all classes
     private void ShowSnackbar(View view, String text) {
         Snackbar.make(view, text, Snackbar.LENGTH_LONG)
                 .setAction("CLOSE", new View.OnClickListener() {
