@@ -3,6 +3,7 @@ package com.example.segproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +28,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivityLog";
@@ -52,6 +52,11 @@ public class RegisterActivity extends AppCompatActivity {
         PasswordField = (EditText) findViewById(R.id.PasswordField);
         RoleField = (ToggleButton) findViewById(R.id.toggleButton);
 
+        NameField.setText("");
+        UsernameField.setText("");
+        PasswordField.setText("");
+        RoleField.setText(RoleField.getTextOff());
+
         try {
             digest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException err) {
@@ -66,32 +71,41 @@ public class RegisterActivity extends AppCompatActivity {
         if (digest == null) return;
 
         final String name = NameField.getText().toString().trim();
-        // TODO: Proper name validation
         if (name.isEmpty()) {
-            // TODO: Show invalid name
+            ShowSnackbar(view, "Name is required.");
+            return;
+        } else if (name.length() > 50) {
+            ShowSnackbar(view, "Name must be less than 50 characters.");
             return;
         }
 
         final String username = UsernameField.getText().toString().trim();
-        // TODO: Proper username validation, possibly needs to use email to register?
         if (username.isEmpty()) {
-            // TODO: Show invalid username
+            ShowSnackbar(view, "Username is required.");
+            return;
+        } else if (username.length() < 4 || username.length() > 50) {
+            ShowSnackbar(view, "Username must be between 4 and 50 characters.");
+            return;
+        } else if (!username.matches("\\S+")) {
+            ShowSnackbar(view, "Username cannot contain any whitespace.");
             return;
         }
 
         String password = PasswordField.getText().toString().trim();
-        // TODO: Proper password validation
         if (password.isEmpty()) {
-            // TODO: Show invalid password
+            ShowSnackbar(view, "Password is required.");
+            return;
+        } else if (password.length() < 4 || password.length() > 50) {
+            ShowSnackbar(view, "Password must be between 4 and 50 characters.");
+            return;
+        } else if (!password.matches("\\S+")) {
+            ShowSnackbar(view, "Password cannot contain any whitespace.");
             return;
         }
 
         // TODO: Use a dropdown for role?
         final String role = RoleField.getText().toString().toLowerCase().trim();
-        if (role.isEmpty()) {
-            // TODO: Show invalid role
-            return;
-        }
+        if (role.isEmpty()) return;
 
         final String passHash = Base64.encodeToString(digest.digest(password.getBytes()), Base64.DEFAULT).trim();
 
@@ -124,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void RegisterUser(String name, String username, String password, String role, final View view) {
-        HashMap<String, Object> data = new HashMap<>();
+        final HashMap<String, Object> data = new HashMap<>();
 
         data.put("name", name);
         data.put("username", username);
@@ -132,12 +146,14 @@ public class RegisterActivity extends AppCompatActivity {
         data.put("role", role);
         data.put("created", FieldValue.serverTimestamp());
 
+
         accountsRef.add(data)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        setResult(RESULT_OK);
-                        finish();
+                        data.remove("created");
+                        GoToLoggedIn(data);
+
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                     }
                 })
@@ -148,6 +164,16 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.e(TAG, "Error adding document", err);
                     }
                 });
+    }
+
+    private void GoToLoggedIn(HashMap data) {
+        Intent returnIntent = new Intent(RegisterActivity.this, LoggedInActivity.class);
+
+        returnIntent.putExtra("user", data);
+        returnIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+
+        startActivity(returnIntent);
+        this.finish();
     }
 
     private void ShowSnackbar(View view, String text) {

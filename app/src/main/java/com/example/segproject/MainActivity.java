@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         Password = (EditText) findViewById(R.id.etPassword);
         Login = (Button) findViewById(R.id.btnLogin);
 
+        Name.setText("");
+        Password.setText("");
+
         db = FirebaseFirestore.getInstance();
         accountsRef = db.collection("accounts");
 
@@ -88,16 +91,28 @@ public class MainActivity extends AppCompatActivity {
     public void OnLoginPress(View view) {
         if (digest == null) return;
 
-        String username = Name.getText().toString();
-        final String password = Password.getText().toString();
+        String username = Name.getText().toString().trim();
+        final String password = Password.getText().toString().trim();
 
-        if (username == null || username.isEmpty()) {
-            // TODO: Show invalid username
+        if (username.isEmpty()) {
+            ShowSnackbar(view, "Username is required.");
+            return;
+        } else if (username.length() < 4 || username.length() > 50) {
+            ShowSnackbar(view, "Username must be between 4 and 50 characters.");
+            return;
+        } else if (!username.matches("\\S+")) {
+            ShowSnackbar(view, "Username cannot contain any whitespace.");
             return;
         }
 
-        if (password == null || password.isEmpty()) {
-            // TODO: Show invalid password
+        if (password.isEmpty()) {
+            ShowSnackbar(view, "Password is required.");
+            return;
+        } else if (password.length() < 4 || password.length() > 50) {
+            ShowSnackbar(view, "Password must be between 4 and 50 characters.");
+            return;
+        } else if (!password.matches("\\S+")) {
+            ShowSnackbar(view, "Password cannot contain any whitespace.");
             return;
         }
 
@@ -119,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : result) {
                         String checkHash = document.get("password").toString().trim();
 
-                        String hash = Base64.encodeToString(digest.digest(password.trim().getBytes()), Base64.DEFAULT).trim();
+                        String hash = Base64.encodeToString(digest.digest(password.getBytes()), Base64.DEFAULT).trim();
 
                         Log.d(TAG, checkHash);
                         Log.d(TAG, hash);
