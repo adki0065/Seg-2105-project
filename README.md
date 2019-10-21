@@ -1,4 +1,5 @@
 # Seg-2105-project
+Repository: [GitHub](https://github.com/adki0065/Seg-2105-project)
 
 ## Members
 
