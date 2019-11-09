@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         String username = Name.getText().toString().trim();
         final String password = Password.getText().toString().trim();
 
-        if (username.isEmpty()) {
+            if (username.isEmpty()) {
             ShowSnackbar(view, "Username is required.");
             return;
         } else if (username.length() < 4 || username.length() > 50) {
@@ -141,11 +141,17 @@ public class MainActivity extends AppCompatActivity {
 
                         if (hash.equals(checkHash)) {
 //                            ShowSnackbar(activityView, "Logged in.");
+                            String userRole = document.getString("role").toLowerCase();
+
+                            Class nextActivity;
+
+                            if (userRole.equals("admin")) nextActivity = AdminActivity.class;
+                            else nextActivity = LoggedInActivity.class;
 
                             //Creating a Return intent to pass to the Main Activity
-                            Intent returnIntent = new Intent(MainActivity.this, LoggedInActivity.class);
+                            Intent returnIntent = new Intent(MainActivity.this, nextActivity);
                             //Adding stuff to the return intent
-                            HashMap<String, String> hashMap = new HashMap<String, String>();
+                            HashMap<String, String> hashMap = new HashMap<>();
 
                             hashMap.put("name", document.getString("name"));
                             hashMap.put("role", document.getString("role"));
