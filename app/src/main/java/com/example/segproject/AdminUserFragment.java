@@ -128,7 +128,7 @@ public class AdminUserFragment extends Fragment {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ShowSnackbar(view, "Clicked on row" + row.getId());
+                    ShowSnackbar(view, "Clicked on row#" + row.getId());
 
                 }
             });
