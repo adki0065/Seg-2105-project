@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -104,14 +105,33 @@ public class AdminUserFragment extends Fragment {
         });
     }
 
+    private void ShowSnackbar(View view, String text) {
+        Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+                .setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                .show();
+    }
+
     private void updateTable() {
         accountTable.removeAllViews();
         accountTable.addView(getLayoutInflater().inflate(R.layout.admin_user_header, accountTable, false));
 
         int i = 0;
         for (ClinicAccount account : accounts) {
-            TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.admin_user_row, accountTable, false);
+            final TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.admin_user_row, accountTable, false);
+            row.setId(i);
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ShowSnackbar(view, "Clicked on row" + row.getId());
 
+                }
+            });
 
             if (++i % 2 == 0) {
                 row.setBackgroundColor(671088640);
@@ -137,5 +157,8 @@ public class AdminUserFragment extends Fragment {
 
             accountTable.addView(row);
         }
+    }
+    public void rowClick(View view) {
+        view.getId();
     }
 }
