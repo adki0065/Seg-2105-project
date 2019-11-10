@@ -157,9 +157,9 @@ public class AdminUserFragment extends Fragment {
         // setup the alert builder
         final View v = view;
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        String name = view.getContentDescription().toString();
+        final String uName = view.getContentDescription().toString();
 
-        builder.setTitle("Edit or Delete " + name);
+        builder.setTitle("Edit or Delete " + uName);
 
 
 
@@ -175,7 +175,17 @@ public class AdminUserFragment extends Fragment {
         builder.setNegativeButton("Delete             ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //delete account
+                boolean found = true;
+                int j = -1;
+                while (found){
+                    j++;
+                    if (uName.equalsIgnoreCase(accounts.get(j).username)){
+                        accounts.remove(j);
+                        found = false;
+                        updateTable();
+                    }
+                }
+                    //delete account
             }
         });
 
