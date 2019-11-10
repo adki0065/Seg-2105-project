@@ -1,8 +1,9 @@
 package com.example.segproject;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.app.AlertDialog.Builder;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -125,13 +126,13 @@ public class AdminUserFragment extends Fragment {
         for (ClinicAccount account : accounts) {
             final TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.admin_user_row, accountTable, false);
             row.setId(i);
+            row.setContentDescription(account.getName());
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ShowSnackbar(view, "Clicked on row#" + row.getId());
+                    showAlertDialogRowClicked(view);
 
-                }
-            });
+            }});
 
             if (++i % 2 == 0) {
                 row.setBackgroundColor(671088640);
@@ -160,5 +161,24 @@ public class AdminUserFragment extends Fragment {
     }
     public void rowClick(View view) {
         view.getId();
+    }
+    public void showAlertDialogRowClicked(View view) {
+
+        // setup the alert builder
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        String name = view.getContentDescription().toString();
+
+        builder.setTitle("Edit or Delete " + name);
+
+
+        // add the buttons
+        builder.setPositiveButton("Edit               ", null);
+        builder.setNeutralButton("Cancel              ", null);
+        builder.setNegativeButton("Delete             ", null);
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
