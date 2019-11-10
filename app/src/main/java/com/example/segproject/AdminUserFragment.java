@@ -1,6 +1,7 @@
 package com.example.segproject;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.AlertDialog.Builder;
@@ -106,17 +107,6 @@ public class AdminUserFragment extends Fragment {
         });
     }
 
-    private void ShowSnackbar(View view, String text) {
-        Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                .show();
-    }
 
     private void updateTable() {
         accountTable.removeAllViews();
@@ -165,19 +155,31 @@ public class AdminUserFragment extends Fragment {
     public void showAlertDialogRowClicked(View view) {
 
         // setup the alert builder
-
+        final View v = view;
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         String name = view.getContentDescription().toString();
 
         builder.setTitle("Edit or Delete " + name);
 
 
-        // add the buttons
-        builder.setPositiveButton("Edit               ", null);
-        builder.setNeutralButton("Cancel              ", null);
-        builder.setNegativeButton("Delete             ", null);
 
-        // create and show the alert dialog
+        builder.setPositiveButton("Edit               ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //edit account
+            }
+        });
+
+        builder.setNeutralButton("Cancel              ", null);
+
+        builder.setNegativeButton("Delete             ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //delete account
+            }
+        });
+
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
