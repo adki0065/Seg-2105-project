@@ -68,20 +68,6 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
-    private void validate(String userName, String userPassword) {
-//        if((userName.equals("Admin")) && (userPassword.equals("5T5ptQ"))){
-//            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-//            startActivity(intent);
-//        }else if( /* Employee account login */ ){
-//            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-//            startActivity(intent);
-//        }else if( /* Client account login */ ){
-//            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-//            startActivity(intent);
-//        }else {
-//            //Login failed try again code
-//        }
-    }
 
     public void OnRegisterPress(View view) {
         Intent returnIntent = new Intent(MainActivity.this, RegisterActivity.class);
@@ -94,25 +80,15 @@ public class MainActivity extends AppCompatActivity {
         String username = Name.getText().toString().trim();
         final String password = Password.getText().toString().trim();
 
-            if (username.isEmpty()) {
-            ShowSnackbar(view, "Username is required.");
-            return;
-        } else if (username.length() < 4 || username.length() > 50) {
-            ShowSnackbar(view, "Username must be between 4 and 50 characters.");
-            return;
-        } else if (!username.matches("\\S+")) {
-            ShowSnackbar(view, "Username cannot contain any whitespace.");
+        String validateUsername = Util.ValidateUsername(username);
+        if (validateUsername != null) {
+            Util.ShowSnackbar(view, validateUsername, getResources().getColor(android.R.color.holo_red_light));
             return;
         }
 
-        if (password.isEmpty()) {
-            ShowSnackbar(view, "Password is required.");
-            return;
-        } else if (password.length() < 4 || password.length() > 50) {
-            ShowSnackbar(view, "Password must be between 4 and 50 characters.");
-            return;
-        } else if (!password.matches("\\S+")) {
-            ShowSnackbar(view, "Password cannot contain any whitespace.");
+        String validatePassword = Util.ValidatePassword(password);
+        if (validatePassword != null) {
+            Util.ShowSnackbar(view, validatePassword, getResources().getColor(android.R.color.holo_red_light));
             return;
         }
 
@@ -127,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     QuerySnapshot result = task.getResult();
 
                     if (result.isEmpty()) {
-                        ShowSnackbar(activityView, "Incorrect username or password.");
+                        Util.ShowSnackbar(activityView, "Incorrect username or password.", getResources().getColor(android.R.color.holo_red_light));
                         return;
                     }
 
@@ -161,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
                             startActivity(returnIntent);
                         } else {
-                            ShowSnackbar(activityView, "Incorrect username or password.");
+                            Util.ShowSnackbar(activityView, "Incorrect username or password.", getResources().getColor(android.R.color.holo_red_light));
                         }
 
 //                        Log.d(TAG, document.getId() + " => " + document.getData());
@@ -169,24 +145,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     Log.e(TAG, "Error getting documents: ", task.getException());
-                    ShowSnackbar(activityView, "Error logging in.");
+                    Util.ShowSnackbar(activityView, "Error logging in.", getResources().getColor(android.R.color.holo_red_light));
                 }
             }
         });
 
 
-    }
-
-    // TODO: Make ShowSnackbar a public method accessible by all classes
-    private void ShowSnackbar(View view, String text) {
-        Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                .show();
     }
 }

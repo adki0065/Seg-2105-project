@@ -71,41 +71,28 @@ public class RegisterActivity extends AppCompatActivity {
         if (digest == null) return;
 
         final String name = NameField.getText().toString().trim();
-        if (name.isEmpty()) {
-            ShowSnackbar(view, "Name is required.");
-            return;
-        } else if (name.length() > 50) {
-            ShowSnackbar(view, "Name must be less than 50 characters.");
+        String validateName = Util.ValidateName(name);
+        if (validateName != null) {
+            Util.ShowSnackbar(view, validateName, getResources().getColor(android.R.color.holo_red_light));
             return;
         }
 
         final String username = UsernameField.getText().toString().trim();
-        if (username.isEmpty()) {
-            ShowSnackbar(view, "Username is required.");
-            return;
-        } else if (username.length() < 4 || username.length() > 50) {
-            ShowSnackbar(view, "Username must be between 4 and 50 characters.");
-            return;
-        } else if (!username.matches("\\S+")) {
-            ShowSnackbar(view, "Username cannot contain any whitespace.");
+        String validateUsername = Util.ValidateUsername(username);
+        if (validateUsername != null) {
+            Util.ShowSnackbar(view, validateUsername, getResources().getColor(android.R.color.holo_red_light));
             return;
         }
 
         String password = PasswordField.getText().toString().trim();
-        if (password.isEmpty()) {
-            ShowSnackbar(view, "Password is required.");
-            return;
-        } else if (password.length() < 4 || password.length() > 50) {
-            ShowSnackbar(view, "Password must be between 4 and 50 characters.");
-            return;
-        } else if (!password.matches("\\S+")) {
-            ShowSnackbar(view, "Password cannot contain any whitespace.");
+        String validatePassword = Util.ValidatePassword(password);
+        if (validatePassword != null) {
+            Util.ShowSnackbar(view, validatePassword, getResources().getColor(android.R.color.holo_red_light));
             return;
         }
 
         // TODO: Use a dropdown for role?
         final String role = RoleField.getText().toString().toLowerCase().trim();
-        if (role.isEmpty()) return;
 
         final String passHash = Base64.encodeToString(digest.digest(password.getBytes()), Base64.DEFAULT).trim();
 
@@ -121,11 +108,11 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.getResult().isEmpty()) {
                                 RegisterUser(name, username, passHash, role, activityView);
                             } else {
-                                ShowSnackbar(activityView, "User already registered.");
+                                Util.ShowSnackbar(activityView, "User already registered.", getResources().getColor(android.R.color.holo_red_light));
                             }
                         } else {
                             Log.e(TAG, "Error getting document: ", task.getException());
-                            ShowSnackbar(activityView, "Error creating user.");
+                            Util.ShowSnackbar(activityView, "Error creating user.", getResources().getColor(android.R.color.holo_red_light));
                         }
                     }
                 });
@@ -160,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception err) {
-                        ShowSnackbar(view, "Error creating user.");
+                        Util.ShowSnackbar(view, "Error creating user.", getResources().getColor(android.R.color.holo_red_light));
                         Log.e(TAG, "Error adding document", err);
                     }
                 });
@@ -176,16 +163,5 @@ public class RegisterActivity extends AppCompatActivity {
         this.finish();
     }
 
-    private void ShowSnackbar(View view, String text) {
-        Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                .show();
-    }
 
 }

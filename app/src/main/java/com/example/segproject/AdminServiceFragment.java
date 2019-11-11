@@ -204,12 +204,9 @@ public class AdminServiceFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         final String name = nameEdit.getText().toString().trim();
-
-                        if (name.isEmpty()) {
-                            Toast.makeText(nameEdit.getContext(), "Name is required.", Toast.LENGTH_SHORT).show();
-                            return;
-                        } else if (name.length() > 50) {
-                            Toast.makeText(nameEdit.getContext(), "Name must be less than 50 characters.", Toast.LENGTH_SHORT).show();
+                        String validateName = Util.ValidateName(name);
+                        if (validateName != null) {
+                            Toast.makeText(nameEdit.getContext(), validateName, Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -301,11 +298,9 @@ public class AdminServiceFragment extends Fragment {
 
     public void OnNewServicePress(final View view) {
         final String name = serviceNameEditText.getText().toString().trim();
-        if (name.isEmpty()) {
-            Util.ShowSnackbar(view, "Name is required", getResources().getColor(android.R.color.holo_red_light));
-            return;
-        } else if (name.length() > 50) {
-            Util.ShowSnackbar(view, "Name must be less than 50 characters.", getResources().getColor(android.R.color.holo_red_light));
+        String validateName = Util.ValidateName(name);
+        if (validateName != null) {
+            Util.ShowSnackbar(view, validateName, getResources().getColor(android.R.color.holo_red_light));
             return;
         }
 
