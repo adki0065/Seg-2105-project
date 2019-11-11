@@ -4,10 +4,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/service_edit_name"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="New name" />
+        android:layout_height="50dp">
 
+        <EditText
+            android:id="@+id/service_edit_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:hint="New name" />
+
+        <Spinner
+            android:id="@+id/service_edit_role"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5" />
+
+    </LinearLayout>
 </LinearLayout>

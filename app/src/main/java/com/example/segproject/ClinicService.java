@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 public class ClinicService {
 
     public String name;
+    public String role;
     public String id;
 
     public String getName() {
@@ -13,6 +14,14 @@ public class ClinicService {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getId() {

@@ -12,15 +12,21 @@
             android:id="@+id/newServiceEditText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:hint="Name" />
+
+        <Spinner
+            android:id="@+id/serviceRoleSpinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4" />
 
         <Button
             android:id="@+id/newServiceButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:text="Add service" />
+            android:layout_weight="0.2"
+            android:text="Add" />
 
     </LinearLayout>
 

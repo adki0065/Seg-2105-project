@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -43,6 +45,7 @@ public class AdminServiceFragment extends Fragment {
     private TableLayout serviceTable;
     private EditText serviceNameEditText;
     private Button serviceButton;
+    private Spinner serviceRole;
 
     private ArrayList<ClinicService> services;
 
@@ -55,6 +58,15 @@ public class AdminServiceFragment extends Fragment {
         serviceTable = (TableLayout) view.findViewById(R.id.serviceTable);
         serviceNameEditText = (EditText) view.findViewById(R.id.newServiceEditText);
         serviceButton = (Button) view.findViewById(R.id.newServiceButton);
+
+        serviceRole = (Spinner) view.findViewById(R.id.serviceRoleSpinner);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.service_roles, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        serviceRole.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
         servicesRef = db.collection("services");
@@ -139,11 +151,17 @@ public class AdminServiceFragment extends Fragment {
             }
 
             String name = service.getName();
+            String role = service.getRole();
 
             TextView nameCol = (TextView) getLayoutInflater().inflate(R.layout.admin_user_column, row, false);
             nameCol.setText(name);
 
+
+            TextView roleCol = (TextView) getLayoutInflater().inflate(R.layout.admin_user_column, row, false);
+            roleCol.setText(role);
+
             row.addView(nameCol);
+            row.addView(roleCol);
 
             serviceTable.addView(row);
         }
@@ -156,6 +174,14 @@ public class AdminServiceFragment extends Fragment {
         builder.setView(view);
 
         final EditText nameEdit = (EditText) view.findViewById(R.id.service_edit_name);
+        final Spinner roleSpinner = (Spinner) view.findViewById(R.id.service_edit_role);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.service_roles, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        roleSpinner.setAdapter(adapter);
 
         builder.setTitle("Edit " + service.getName());
 
@@ -187,12 +213,14 @@ public class AdminServiceFragment extends Fragment {
                             return;
                         }
 
+                        final String role = roleSpinner.getSelectedItem().toString().toLowerCase().trim();
 
-                        servicesRef.document(service.getId()).update("name", name)
+                        servicesRef.document(service.getId()).update("name", name, "role", role)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         service.setName(name);
+                                        service.setRole(role);
                                         dialog.dismiss();
                                         updateTable();
                                         Log.d(TAG, "DocumentSnapshot successfully updated!");
@@ -211,9 +239,7 @@ public class AdminServiceFragment extends Fragment {
             }
         });
 
-
         dialog.show();
-
     }
 
     private void showAlertDialogRowClicked(final View view, final ClinicService service) {
@@ -274,7 +300,6 @@ public class AdminServiceFragment extends Fragment {
     }
 
     public void OnNewServicePress(final View view) {
-
         final String name = serviceNameEditText.getText().toString().trim();
         if (name.isEmpty()) {
             Util.ShowSnackbar(view, "Name is required", getResources().getColor(android.R.color.holo_red_light));
@@ -284,11 +309,15 @@ public class AdminServiceFragment extends Fragment {
             return;
         }
 
+        final String role = serviceRole.getSelectedItem().toString().toLowerCase().trim();
+
+        serviceRole.setEnabled(false);
         serviceNameEditText.setEnabled(false);
         serviceButton.setEnabled(false);
 
         HashMap<String, Object> data = new HashMap<>();
         data.put("name", name);
+        data.put("role", role);
         data.put("created", FieldValue.serverTimestamp());
 
         servicesRef.add(data)
@@ -298,6 +327,7 @@ public class AdminServiceFragment extends Fragment {
                         ClinicService service = new ClinicService();
                         service.setId(documentReference.getId());
                         service.setName(name);
+                        service.setRole(role);
 
                         services.add(0, service);
 
@@ -308,6 +338,8 @@ public class AdminServiceFragment extends Fragment {
                         serviceNameEditText.setEnabled(true);
                         serviceButton.setEnabled(true);
                         serviceNameEditText.setText("");
+                        serviceRole.setEnabled(true);
+                        serviceRole.setSelection(0);
                         Util.ShowSnackbar(view, "Added service.", getResources().getColor(android.R.color.holo_blue_bright));
 
                     }
@@ -317,6 +349,7 @@ public class AdminServiceFragment extends Fragment {
                     public void onFailure(@NonNull Exception err) {
                         serviceNameEditText.setEnabled(true);
                         serviceButton.setEnabled(true);
+                        serviceRole.setEnabled(true);
                         Log.e(TAG, "Error adding service", err);
                         Util.ShowSnackbar(view, "Couldn't add service.", getResources().getColor(android.R.color.holo_red_light));
                     }
