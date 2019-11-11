@@ -1,6 +1,12 @@
+
 package com.example.segproject;
 
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
@@ -11,12 +17,27 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void nameNotEmpty() throws Exception {
+    public void nameNotEmpty() throws Exception{
         assertNotNull(R.id.NameField);
+    }
+
+    @Test
+    public void usernameNotEmpty() throws Exception {
+        assertNotNull(R.id.UsernameField);
     }
 
     @Test
     public void passwordNotEmpty() throws Exception {
         assertNotNull(R.id.PasswordField);
+    }
+
+    @Test
+    public void loginButtonNotEmpty() throws Exception {
+        assertNotNull(R.id.btnLogin);
+    }
+
+    @Test
+    public void roleNotEmpty() throws Exception {
+        assertNotNull(R.id.toggleButton);
     }
 }
