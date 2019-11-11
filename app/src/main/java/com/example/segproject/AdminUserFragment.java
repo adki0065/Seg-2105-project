@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.AlertDialog.Builder;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -14,13 +15,19 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,6 +43,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class AdminUserFragment extends Fragment {
@@ -95,7 +103,13 @@ public class AdminUserFragment extends Fragment {
                     ArrayList<ClinicAccount> results = new ArrayList<>();
 
                     for (DocumentSnapshot document : result) {
-                        results.add(document.toObject(ClinicAccount.class));
+                        ClinicAccount account = document.toObject(ClinicAccount.class);
+                        //                        Log.d(TAG, account.toString());
+
+                        if (!account.getRole().equals("admin")) {
+                            account.setId(document.getId());
+                            results.add(account);
+                        }
                     }
                     accounts = results;
                     updateTable();
@@ -113,16 +127,17 @@ public class AdminUserFragment extends Fragment {
         accountTable.addView(getLayoutInflater().inflate(R.layout.admin_user_header, accountTable, false));
 
         int i = 0;
-        for (ClinicAccount account : accounts) {
+        for (final ClinicAccount account : accounts) {
             final TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.admin_user_row, accountTable, false);
             row.setId(i);
-            row.setContentDescription(account.getName());
+
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showAlertDialogRowClicked(view);
+                    showAlertDialogRowClicked(view, account);
 
-            }});
+                }
+            });
 
             if (++i % 2 == 0) {
                 row.setBackgroundColor(671088640);
@@ -149,43 +164,146 @@ public class AdminUserFragment extends Fragment {
             accountTable.addView(row);
         }
     }
-    public void rowClick(View view) {
-        view.getId();
+
+    private void showEditAlertDialog(final ClinicAccount account, final View topView) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+
+        View view = getLayoutInflater().inflate(R.layout.admin_user_edit_dialog, null);
+        builder.setView(view);
+
+        final EditText nameEdit = (EditText) view.findViewById(R.id.user_edit_name);
+        final ToggleButton roleEdit = (ToggleButton) view.findViewById(R.id.user_edit_role);
+
+        builder.setTitle("Edit " + account.getUsername());
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.setPositiveButton("Edit", null);
+
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        final String name = nameEdit.getText().toString().trim();
+                        if (name.isEmpty()) {
+                            Toast.makeText(nameEdit.getContext(), "Name is required.", Toast.LENGTH_SHORT).show();
+//                            Util.ShowSnackbar(topView, "Name is required.", getResources().getColor(android.R.color.holo_red_light));
+                            return;
+                        } else if (name.length() > 50) {
+                            Toast.makeText(nameEdit.getContext(), "Name must be less than 50 characters.", Toast.LENGTH_SHORT).show();
+//                            Util.ShowSnackbar(topView, "Name must be less than 50 characters.", getResources().getColor(android.R.color.holo_red_light));
+                            return;
+                        }
+
+                        final String role = roleEdit.getText().toString().toLowerCase().trim();
+
+                        accountsRef.document(account.getId()).update("name", name, "role", role)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        account.setName(name);
+                                        account.setRole(role);
+                                        dialog.dismiss();
+                                        updateTable();
+                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(nameEdit.getContext(), "Couldn't update user.", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        Log.e(TAG, "Error updating document", e);
+                                    }
+                                });
+                    }
+                });
+            }
+        });
+
+//        builder.setPositiveButton("Edit " + account.getUsername(), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//
+//            }
+//        });
+
+        dialog.show();
     }
-    public void showAlertDialogRowClicked(View view) {
+
+    public void showAlertDialogRowClicked(final View view, final ClinicAccount account) {
 
         // setup the alert builder
         final View v = view;
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        final String uName = view.getContentDescription().toString();
 
-        builder.setTitle("Edit or Delete " + uName);
+        builder.setTitle("Edit or Delete " + account.getUsername());
 
-
-
-        builder.setPositiveButton("Edit               ", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //edit account
+                dialogInterface.dismiss();
+                showEditAlertDialog(account, view);
             }
         });
 
-        builder.setNeutralButton("Cancel              ", null);
-
-        builder.setNegativeButton("Delete             ", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean found = true;
-                int j = -1;
-                while (found){
-                    j++;
-                    if (uName.equalsIgnoreCase(accounts.get(j).username)){
-                        accounts.remove(j);
-                        found = false;
-                        updateTable();
-                    }
-                }
-                    //delete account
+            }
+        });
+
+        builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                accountsRef.document(account.getId()).delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                String uName = account.getUsername();
+                                for (int j = 0; j < accounts.size(); j++) {
+                                    if (uName.equals(accounts.get(j).getUsername())) {
+                                        accounts.remove(j);
+                                        updateTable();
+                                        break;
+                                    }
+                                }
+                                Log.d(TAG, "Deleted user");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getView().getContext(), "Couldn't delete user.", Toast.LENGTH_SHORT).show();
+
+//                                Util.ShowSnackbar(getView(), "Failed to delete account.", getResources().getColor(android.R.color.holo_red_light));
+                                Log.e(TAG, "Error deleting user", e);
+                            }
+                        });
+
+
+//                boolean found = true;
+//                int j = -1;
+//                while (found) {
+//                    j++;
+//                    if (account.getUsername().equals(accounts.get(j).getUsername())) {
+//                        accounts.remove(j);
+//                        found = false;
+//                        updateTable();
+//                    }
+//                }
+
             }
         });
 

@@ -1,6 +1,7 @@
 package com.example.segproject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -100,7 +103,9 @@ public class AdminServiceFragment extends Fragment {
                     }
 
                     for (DocumentSnapshot document : result) {
-                        results.add(document.toObject(ClinicService.class));
+                        ClinicService service = document.toObject(ClinicService.class);
+                        service.setId(document.getId());
+                        results.add(service);
                     }
                     services = results;
                     updateTable();
@@ -118,21 +123,22 @@ public class AdminServiceFragment extends Fragment {
 
         int i = 0;
 
-        for (int j = 0; j < 10; j++) {
+        for (final ClinicService service : services) {
             TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.admin_user_row, serviceTable, false);
-            row.setBackgroundColor(671088640);
-            serviceTable.addView(row);
-        }
+            row.setId(i);
 
-        for (ClinicService account : services) {
-            TableRow row = (TableRow) getLayoutInflater().inflate(R.layout.admin_user_row, serviceTable, false);
-
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showAlertDialogRowClicked(view, service);
+                }
+            });
 
             if (++i % 2 == 0) {
                 row.setBackgroundColor(671088640);
             }
 
-            String name = account.getName();
+            String name = service.getName();
 
             TextView nameCol = (TextView) getLayoutInflater().inflate(R.layout.admin_user_column, row, false);
             nameCol.setText(name);
@@ -143,9 +149,140 @@ public class AdminServiceFragment extends Fragment {
         }
     }
 
+    private void showEditAlertDialog(final ClinicService service, final View topView) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+
+        View view = getLayoutInflater().inflate(R.layout.admin_service_edit_dialog, null);
+        builder.setView(view);
+
+        final EditText nameEdit = (EditText) view.findViewById(R.id.service_edit_name);
+
+        builder.setTitle("Edit " + service.getName());
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.setPositiveButton("Edit", null);
+
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        final String name = nameEdit.getText().toString().trim();
+
+                        if (name.isEmpty()) {
+                            Toast.makeText(nameEdit.getContext(), "Name is required.", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if (name.length() > 50) {
+                            Toast.makeText(nameEdit.getContext(), "Name must be less than 50 characters.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+
+                        servicesRef.document(service.getId()).update("name", name)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        service.setName(name);
+                                        dialog.dismiss();
+                                        updateTable();
+                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        dialog.dismiss();
+                                        Toast.makeText(nameEdit.getContext(), "Couldn't update service.", Toast.LENGTH_SHORT).show();
+                                        Log.e(TAG, "Error updating document", e);
+                                    }
+                                });
+                    }
+                });
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
+    private void showAlertDialogRowClicked(final View view, final ClinicService service) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("Edit/delete " + service.getName());
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showEditAlertDialog(service, view);
+            }
+        });
+        builder.setNegativeButton("Delete", null);
+
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button deleteButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(final View _view) {
+                        servicesRef.document(service.getId()).delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        for (int j = 0; j < services.size(); j++) {
+                                            if (service.getId().equals(services.get(j).getId())) {
+                                                services.remove(j);
+                                                break;
+                                            }
+                                        }
+                                        dialog.dismiss();
+                                        updateTable();
+                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(view.getContext(), "Couldn't delete service.", Toast.LENGTH_SHORT).show();
+//                                        Util.ShowSnackbar(view, "Couldn't delete service", getResources().getColor(android.R.color.holo_red_light));
+                                        Log.e(TAG, "Error updating document", e);
+                                    }
+                                });
+                    }
+                });
+            }
+        });
+
+        dialog.show();
+    }
+
     public void OnNewServicePress(final View view) {
+
         final String name = serviceNameEditText.getText().toString().trim();
-        if (name.isEmpty()) return;
+        if (name.isEmpty()) {
+            Util.ShowSnackbar(view, "Name is required", getResources().getColor(android.R.color.holo_red_light));
+            return;
+        } else if (name.length() > 50) {
+            Util.ShowSnackbar(view, "Name must be less than 50 characters.", getResources().getColor(android.R.color.holo_red_light));
+            return;
+        }
 
         serviceNameEditText.setEnabled(false);
         serviceButton.setEnabled(false);
@@ -158,13 +295,21 @@ public class AdminServiceFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        services.add(0, new ClinicService(name));
+                        ClinicService service = new ClinicService();
+                        service.setId(documentReference.getId());
+                        service.setName(name);
+
+                        services.add(0, service);
+
                         updateTable();
+
                         Log.d(TAG, "New service written with ID: " + documentReference.getId());
+
                         serviceNameEditText.setEnabled(true);
                         serviceButton.setEnabled(true);
                         serviceNameEditText.setText("");
                         Util.ShowSnackbar(view, "Added service.", getResources().getColor(android.R.color.holo_blue_bright));
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
