@@ -9,4 +9,12 @@
         <item>Nurse</item>
         <item>Staff</item>
     </string-array>
+
+    <string-array name="clinic_payment_methods">
+        <item>OHIP</item>
+        <item>Mastercard</item>
+        <item>Visa</item>
+        <item>American Express</item>
+        <item>Cash</item>
+    </string-array>
 </resources>

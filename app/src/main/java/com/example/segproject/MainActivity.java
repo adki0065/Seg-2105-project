@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
                         String hash = Base64.encodeToString(digest.digest(password.getBytes()), Base64.DEFAULT).trim();
 
-                        Log.d(TAG, checkHash);
-                        Log.d(TAG, hash);
+//                        Log.d(TAG, checkHash);
+//                        Log.d(TAG, hash);
 
                         if (hash.equals(checkHash)) {
 //                            ShowSnackbar(activityView, "Logged in.");
@@ -121,19 +121,35 @@ public class MainActivity extends AppCompatActivity {
 
                             Class nextActivity;
 
-                            if (userRole.equals("admin")) nextActivity = AdminActivity.class;
-                            else nextActivity = LoggedInActivity.class;
+                            switch (userRole) {
+                                case "admin":
+                                    nextActivity = AdminActivity.class;
+                                    break;
+                                case "employee":
+                                    nextActivity = EmployeeActivity.class;
+                                    break;
+                                default:
+                                    nextActivity = LoggedInActivity.class;
+                                    break;
+                            }
+
+//                            if (userRole.equals("admin")) nextActivity = AdminActivity.class;
+//                            else nextActivity = LoggedInActivity.class;
 
                             //Creating a Return intent to pass to the Main Activity
                             Intent returnIntent = new Intent(MainActivity.this, nextActivity);
                             //Adding stuff to the return intent
-                            HashMap<String, String> hashMap = new HashMap<>();
 
-                            hashMap.put("name", document.getString("name"));
-                            hashMap.put("role", document.getString("role"));
-                            hashMap.put("username", document.getString("username"));
+                            ClinicAccount returnAccount = document.toObject(ClinicAccount.class);
+                            returnAccount.setId(document.getId());
 
-                            returnIntent.putExtra("user", hashMap);
+//                            HashMap<String, String> hashMap = new HashMap<>();
+
+//                            hashMap.put("name", document.getString("name"));
+//                            hashMap.put("role", document.getString("role"));
+//                            hashMap.put("username", document.getString("username"));
+
+                            returnIntent.putExtra("account", returnAccount);
 
                             startActivity(returnIntent);
                         } else {

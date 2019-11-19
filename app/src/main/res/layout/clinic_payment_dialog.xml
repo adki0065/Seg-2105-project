@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp">
+
+    <CheckBox
+        android:id="@+id/clinic_payment_ohip"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="OHIP" />
+
+    <CheckBox
+        android:id="@+id/clinic_payment_master"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Mastercard" />
+
+    <CheckBox
+        android:id="@+id/clinic_payment_visa"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Visa" />
+
+    <CheckBox
+        android:id="@+id/clinic_payment_amex"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="American Express" />
+
+    <CheckBox
+        android:id="@+id/clinic_payment_cash"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Cash" />
+</LinearLayout>

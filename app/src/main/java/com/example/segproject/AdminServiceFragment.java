@@ -147,7 +147,7 @@ public class AdminServiceFragment extends Fragment {
             });
 
             if (++i % 2 == 0) {
-                row.setBackgroundColor(671088640);
+                row.setBackgroundColor(Util.ROW_BG_COLOR);
             }
 
             String name = service.getName();

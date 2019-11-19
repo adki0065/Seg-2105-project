@@ -139,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         data.remove("created");
+                        data.put("id", documentReference.getId());
                         GoToLoggedIn(data);
 
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
@@ -153,10 +154,25 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void GoToLoggedIn(HashMap data) {
-        Intent returnIntent = new Intent(RegisterActivity.this, LoggedInActivity.class);
+    private void GoToLoggedIn(HashMap<String, Object> data) {
+        ClinicAccount account = new ClinicAccount(data.get("name").toString(), data.get("role").toString(), data.get("username").toString(), data.get("id").toString());
 
-        returnIntent.putExtra("user", data);
+        Class nextActivity;
+        switch (data.get("role").toString()) {
+            case "admin":
+                nextActivity = AdminActivity.class;
+                break;
+            case "employee":
+                nextActivity = EmployeeActivity.class;
+                break;
+            default:
+                nextActivity = LoggedInActivity.class;
+                break;
+        }
+
+        Intent returnIntent = new Intent(RegisterActivity.this, nextActivity);
+
+        returnIntent.putExtra("account", account);
         returnIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
 
         startActivity(returnIntent);

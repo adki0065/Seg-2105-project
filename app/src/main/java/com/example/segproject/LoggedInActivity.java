@@ -19,13 +19,16 @@ public class LoggedInActivity extends AppCompatActivity {
         teamAddress = (TextView) findViewById(R.id.loggedInText);
 
         Intent intent = getIntent();
-        HashMap<String, String> hashMap = (HashMap<String, String>) intent.getSerializableExtra("user");
 
-        String name = hashMap.get("name");
-        String role = hashMap.get("role");
+        ClinicAccount account = (ClinicAccount) intent.getSerializableExtra("account");
+
+//        HashMap<String, String> hashMap = (HashMap<String, String>) intent.getSerializableExtra("user");
+
+//        String name = hashMap.get("name");
+//        String role = hashMap.get("role");
 //        String username = hashMap.get("username");
 
-        teamAddress.setText("Welcome " + name + "! You are logged in as " + role);
+        teamAddress.setText("Welcome " + account.getName() + "! You are logged in as " + account.getRole());
     }
 
     @Override

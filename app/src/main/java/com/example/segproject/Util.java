@@ -1,10 +1,14 @@
 package com.example.segproject;
 
+import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
 public class Util {
+    static public int ROW_BG_COLOR = 671088640;
+
     static public void ShowSnackbar(View view, String text, int color) {
         Snackbar.make(view, text, Snackbar.LENGTH_LONG)
                 .setAction("CLOSE", new View.OnClickListener() {
@@ -15,6 +19,19 @@ public class Util {
                 })
                 .setActionTextColor(color)
                 .show();
+    }
+
+    static public String FormatTime(int time) {
+        if (time < 10) return "0" + time;
+        else return "" + time;
+    }
+
+    static public void ShowToast(View view, String text) {
+        ShowToast(view, text, true);
+    }
+
+    static public void ShowToast(View view, String text, Boolean lengthShort) {
+        Toast.makeText(view.getContext(), text, lengthShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
     }
 
     static public String ValidateName(String name) {

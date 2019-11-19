@@ -2,11 +2,23 @@ package com.example.segproject;
 
 import androidx.annotation.NonNull;
 
-public class ClinicAccount {
+import java.io.Serializable;
+
+public class ClinicAccount implements Serializable {
     public String name;
     public String role;
     public String username;
     public String id;
+
+    public ClinicAccount() {
+    }
+
+    public ClinicAccount(String name, String role, String username, String id) {
+        this.name = name;
+        this.role = role;
+        this.username = username;
+        this.id = id;
+    }
 
     public void setName(String name) {
         this.name = name;
