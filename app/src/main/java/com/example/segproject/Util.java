@@ -61,4 +61,24 @@ public class Util {
 
         return null;
     }
+
+    static public String ValidatePhone(String phone) {
+        if (phone.isEmpty())
+            return "Phone is required.";
+        else if (phone.length() < 10 || phone.length() > 11)
+            return "Phone must be 10 or 11 characters.";
+        else if (!phone.matches("\\S+"))
+            return "Phone cannot contain any whitespace.";
+
+        return null;
+    }
+
+    static public String ValidateAddress(String address) {
+        if (address.isEmpty())
+            return "Address is required.";
+        else if (address.length() < 4 || address.length() > 100)
+            return "Address must be between 4 and 100 characters.";
+
+        return null;
+    }
 }

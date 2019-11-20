@@ -3,28 +3,41 @@ package com.example.segproject;
 import androidx.annotation.NonNull;
 
 public class ClinicHours {
-    public ClinicDayHours day;
+    public String start;
+    public String end;
 
     public ClinicHours() {
 
     }
 
-    public ClinicHours(ClinicDayHours day) {
-        this.day = day;
+    public ClinicHours(String start, String end) {
+        this.start = start;
+        this.end = end;
     }
 
-    public ClinicDayHours getDay() {
-        return day;
+    public String getStart() {
+        return start;
     }
 
-    public void setDay(ClinicDayHours day) {
-        this.day = day;
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
     }
 
     @NonNull
     @Override
     public String toString() {
-        if (day == null) return "{}";
-        else return day.toString();
+        if (start == null && end == null) return "{}";
+        else if (start == null) return "{end=" + end + "}";
+        else if (end == null) return "{start=" + start + "}";
+        else
+            return "{start=" + (start == null ? "" : start) + ", end=" + end + "}";
     }
 }

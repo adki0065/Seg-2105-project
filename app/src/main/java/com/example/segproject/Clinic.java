@@ -1,19 +1,28 @@
 package com.example.segproject;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.FieldValue;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class Clinic {
+public class Clinic implements Serializable {
     public String id;
     public String name;
     public String address;
     public String phone;
-    public String[] payments;
-    public String[] services;
+    public List<String> payments;
+    public List<String> services;
     public Map<String, ClinicHours> hours;
 
     public Clinic() {
-        this.payments = new String[0];
+        this.payments = new ArrayList<>();
+        this.services = new ArrayList<>();
         this.hours = new HashMap<>();
     }
 
@@ -57,20 +66,40 @@ public class Clinic {
         this.phone = phone;
     }
 
-    public String[] getPayments() {
+    public List<String> getPayments() {
         return payments;
     }
 
-    public void setPayments(String[] payments) {
+    public void setPayments(List<String> payments) {
         this.payments = payments;
     }
 
-    public String[] getServices() {
+    public List<String> getServices() {
         return services;
     }
 
-    public void setServices(String[] services) {
+    public void setServices(List<String> services) {
         this.services = services;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("{");
+
+        if (id != null) sb.append("id=" + id + ", ");
+        if (name != null) sb.append("name=" + name + ", ");
+        if (address != null) sb.append("address=" + address + ", ");
+        if (phone != null) sb.append("phone=" + phone + ", ");
+
+        sb.append("payments=" + payments.toString() + ", ");
+        sb.append("services=" + services.toString() + ", ");
+        sb.append("hours=" + hours.toString());
+
+        sb.append("}");
+
+        return sb.toString();
+    }
 }

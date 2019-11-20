@@ -41,6 +41,7 @@
                     android:textSize="12sp" />
 
                 <EditText
+                    android:id="@+id/clinic_name_field"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
@@ -66,11 +67,11 @@
                     android:textSize="12sp" />
 
                 <EditText
+                    android:id="@+id/clinic_address_field"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
-                    android:hint="Clinic address"
-                    android:inputType="text" />
+                    android:hint="Clinic address" />
 
                 <Space
                     android:layout_width="0dp"
@@ -92,6 +93,7 @@
                     android:textSize="12sp" />
 
                 <EditText
+                    android:id="@+id/clinic_phone_field"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
@@ -149,6 +151,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
+                    android:onClick="OnSetServices"
                     android:text="Select services"
                     android:textSize="10sp" />
 
@@ -172,10 +175,10 @@
                     android:textSize="12sp" />
 
                 <Button
-                    android:onClick="OnSetHours"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
+                    android:onClick="OnSetHours"
                     android:text="Select hours"
                     android:textSize="10sp" />
 
@@ -201,6 +204,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
+                android:onClick="OnCreateClinic"
                 android:text="Create Clinic" />
 
             <Space
