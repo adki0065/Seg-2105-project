@@ -1,0 +1,68 @@
+model WalkIn
+
+abstract class Account
+attributes
+	username:String
+	name:String
+	password:String
+end
+
+class Admin < Account
+end
+
+class Employee < Account
+attributes
+	role:String
+end
+
+class Patient < Account
+end
+
+class Service
+attributes
+	name:String
+	status:String
+end
+
+class Clinic
+attributes
+	name:String
+	address:String
+end
+
+class ClinicHours 
+attributes
+	start: String
+	close: String
+end
+
+association Delete between
+	Admin[*]
+	Account[*]
+end
+
+association Manage between
+	Admin[*]
+	Service[*]
+end
+
+association Do between
+	Employee[*]
+	Service[*]
+end
+
+association Offer between
+	Service[*]
+	Clinic[1]
+end
+
+composition Hours between
+	Clinic[1]
+	ClinicHours[1]
+end
+
+association SetHours between
+	Employee[*]
+	ClinicHours[1]
+end
+
