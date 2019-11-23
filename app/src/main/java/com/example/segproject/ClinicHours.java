@@ -2,7 +2,9 @@ package com.example.segproject;
 
 import androidx.annotation.NonNull;
 
-public class ClinicHours {
+import java.io.Serializable;
+
+public class ClinicHours implements Serializable {
     public String start;
     public String end;
 

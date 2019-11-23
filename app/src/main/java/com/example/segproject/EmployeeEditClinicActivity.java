@@ -58,6 +58,8 @@ public class EmployeeEditClinicActivity extends AppCompatActivity {
     private CollectionReference servicesRef;
     private CollectionReference clinicsRef;
 
+    private Boolean isEdit = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +70,31 @@ public class EmployeeEditClinicActivity extends AppCompatActivity {
 
         paymentButton = (Button) findViewById(R.id.clinic_payment_button);
 
-        if (clinicSerial != null) clinic = (Clinic) clinicSerial;
-        else clinic = new Clinic();
-
         nameEditText = (EditText) findViewById(R.id.clinic_name_field);
         addressEditText = (EditText) findViewById(R.id.clinic_address_field);
         phoneEditText = (EditText) findViewById(R.id.clinic_phone_field);
+
+        if (clinicSerial != null) {
+            clinic = (Clinic) clinicSerial;
+
+            nameEditText.setText(clinic.getName());
+            addressEditText.setText(clinic.getAddress());
+            phoneEditText.setText(clinic.getPhone());
+
+            updatePaymentButton();
+
+            TextView activityTitle = (TextView) findViewById(R.id.edit_clinic_title);
+            activityTitle.setText("Edit: " + clinic.getName());
+
+            Button createButton = (Button) findViewById(R.id.edit_clinic_button);
+            createButton.setText("Edit Clinic");
+
+            Button deleteButton = (Button) findViewById(R.id.delete_clinic_button);
+            deleteButton.setEnabled(true);
+
+            isEdit = true;
+
+        } else clinic = new Clinic();
 
         db = FirebaseFirestore.getInstance();
         servicesRef = db.collection("services");
@@ -548,23 +569,72 @@ public class EmployeeEditClinicActivity extends AppCompatActivity {
         data.put("hours", clinic.getHours());
         data.put("created", FieldValue.serverTimestamp());
 
-        clinicsRef.add(data)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        clinic.setId(documentReference.getId());
+        if (isEdit) {
+            clinicsRef.document(clinic.getId()).set(data)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Intent returnIntent = new Intent(view.getContext(), EmployeeActivity.class);
 
+                            startActivity(returnIntent);
+
+                            Log.d(TAG, "Updated clinic with ID: " + clinic.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception err) {
+                            Util.ShowSnackbar(view, "Error updating clinic.", getResources().getColor(android.R.color.holo_red_light));
+                            Log.e(TAG, "Error adding clinic", err);
+                        }
+                    });
+        } else {
+            clinicsRef.add(data)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            clinic.setId(documentReference.getId());
+
+                            Intent returnIntent = new Intent(view.getContext(), EmployeeActivity.class);
+
+                            startActivity(returnIntent);
+
+                            Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception err) {
+                            Util.ShowSnackbar(view, "Error creating clinic.", getResources().getColor(android.R.color.holo_red_light));
+                            Log.e(TAG, "Error adding clinic", err);
+                        }
+                    });
+        }
+    }
+
+    public void OnDeleteClinic(final View view) {
+        String id = clinic.getId();
+
+        if (id == null) {
+            Util.ShowSnackbar(view, "Clinic hasn't been created.", getResources().getColor(android.R.color.holo_red_light));
+            return;
+        }
+
+        clinicsRef.document(id).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
                         Intent returnIntent = new Intent(view.getContext(), EmployeeActivity.class);
 
                         startActivity(returnIntent);
 
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        Log.d(TAG, "Updated clinic with ID: " + clinic.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception err) {
-                        Util.ShowSnackbar(view, "Error creating clinic.", getResources().getColor(android.R.color.holo_red_light));
+                        Util.ShowSnackbar(view, "Error updating clinic.", getResources().getColor(android.R.color.holo_red_light));
                         Log.e(TAG, "Error adding clinic", err);
                     }
                 });

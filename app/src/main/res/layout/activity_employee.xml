@@ -23,15 +23,24 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.95">
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.95"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="horizontal|vertical">
 
-            <TableLayout
-                android:id="@+id/employee_clinic_table"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="*">
+                android:scrollbars="horizontal|vertical">
 
-            </TableLayout>
+                <TableLayout
+                    android:id="@+id/employee_clinic_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*">
+
+                </TableLayout>
+            </HorizontalScrollView>
         </ScrollView>
 
         <LinearLayout
@@ -45,10 +54,10 @@
                 android:layout_weight="0.2" />
 
             <Button
-                android:onClick="OnCreateClinicPress"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
+                android:onClick="OnCreateClinicPress"
                 android:text="Create Clinic" />
 
             <Space

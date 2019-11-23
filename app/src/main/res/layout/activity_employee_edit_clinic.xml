@@ -198,19 +198,29 @@
             <Space
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2" />
+                android:layout_weight="0.1" />
 
             <Button
+                android:id="@+id/edit_clinic_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
+                android:layout_weight="0.4"
                 android:onClick="OnCreateClinic"
                 android:text="Create Clinic" />
+
+            <Button
+                android:id="@+id/delete_clinic_button"
+                android:enabled="false"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:onClick="OnDeleteClinic"
+                android:text="Delete Clinic" />
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2" />
+                android:layout_weight="0.1" />
         </LinearLayout>
 
         <Space
