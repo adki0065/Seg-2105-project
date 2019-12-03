@@ -41,7 +41,7 @@ jobs:
       # run tests!
       - run:
           name: build
-          command: sh ./app/src/ test
+          command: sh ./app/src/test tasks
 
       - store_artifacts:
           path: abb/build/outputs/apk/debug/
