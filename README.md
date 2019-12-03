@@ -16,3 +16,10 @@ Admin password: 5T5ptQ
 
 - Aman Brar, 300014458
 
+
+
+
+Build Status
+[![Build
+Status](https://circleci.com/gh/adki0065/Seg-2105-project.png?branch=Real_master)](https://circle
+ci.com/gh/adki0065/Seg-2105-project)
