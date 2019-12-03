@@ -41,7 +41,7 @@ jobs:
       # run tests!
       - run:
           name: Run ValidationUnitTest
-          command: sh ./gradlew clean build
+          command: sh ./gradlew tasks
 
       - store_artifacts:
           path: abb/build/outputs/apk/debug/
