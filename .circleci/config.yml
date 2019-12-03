@@ -41,7 +41,7 @@ jobs:
       # run tests!
       - run:
           name: build
-          command: sh ./gradlew components
+          command: sh ./gradlew test
 
       - store_artifacts:
           path: abb/build/outputs/apk/debug/
