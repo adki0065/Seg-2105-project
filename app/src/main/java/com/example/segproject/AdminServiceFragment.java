@@ -31,16 +31,21 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AdminServiceFragment extends Fragment {
     final String TAG = "ServiceFragmentLog";
 
     private FirebaseFirestore db;
     private CollectionReference servicesRef;
+    private CollectionReference clinicsRef;
 
     private TableLayout serviceTable;
     private EditText serviceNameEditText;
@@ -70,6 +75,7 @@ public class AdminServiceFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         servicesRef = db.collection("services");
+        clinicsRef = db.collection("clinics");
 
         services = new ArrayList<>();
 
@@ -265,27 +271,43 @@ public class AdminServiceFragment extends Fragment {
 
                     @Override
                     public void onClick(final View _view) {
-                        servicesRef.document(service.getId()).delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        clinicsRef.whereArrayContains("services", service.getId()).get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
-                                    public void onSuccess(Void aVoid) {
-                                        for (int j = 0; j < services.size(); j++) {
-                                            if (service.getId().equals(services.get(j).getId())) {
-                                                services.remove(j);
-                                                break;
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            QuerySnapshot result = task.getResult();
+
+                                            if (result.isEmpty()) return;
+
+                                            WriteBatch batch = db.batch();
+
+                                            for (final QueryDocumentSnapshot document : task.getResult()) {
+                                                List<String> services = (ArrayList<String>) document.get("services");
+
+                                                services.remove(service.getId());
+
+                                                Map<String, Object> clinic = new HashMap<>();
+                                                clinic.put("services", services);
+
+                                                batch.update(clinicsRef.document(document.getId()), clinic);
                                             }
+
+                                            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d(TAG, "Updated clinics with new services");
+                                                        deleteService(service, dialog, view);
+                                                    } else {
+                                                        Log.d(TAG, "Error updating clinics with new services", task.getException());
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            Util.ShowToast(view, "Couldn't delete service.");
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
                                         }
-                                        dialog.dismiss();
-                                        updateTable();
-                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(view.getContext(), "Couldn't delete service.", Toast.LENGTH_SHORT).show();
-//                                        Util.ShowSnackbar(view, "Couldn't delete service", getResources().getColor(android.R.color.holo_red_light));
-                                        Log.e(TAG, "Error updating document", e);
                                     }
                                 });
                     }
@@ -294,6 +316,32 @@ public class AdminServiceFragment extends Fragment {
         });
 
         dialog.show();
+    }
+
+    private void deleteService(final ClinicService service, final AlertDialog dialog, final View view) {
+        servicesRef.document(service.getId()).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        for (int j = 0; j < services.size(); j++) {
+                            if (service.getId().equals(services.get(j).getId())) {
+                                services.remove(j);
+                                break;
+                            }
+                        }
+                        dialog.dismiss();
+                        updateTable();
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Util.ShowToast(view, "Couldn't delete service.");
+                        Log.e(TAG, "Error updating document", e);
+                    }
+                });
+
     }
 
     public void OnNewServicePress(final View view) {

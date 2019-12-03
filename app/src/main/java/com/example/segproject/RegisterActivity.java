@@ -178,6 +178,4 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(returnIntent);
         this.finish();
     }
-
-
 }
