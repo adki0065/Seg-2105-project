@@ -23,9 +23,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeActivity extends AppCompatActivity {
-    final String TAG = "ServiceFragmentLog";
+    final String TAG = "EmployeeActivityLog";
 
     ClinicAccount account;
 
@@ -72,14 +73,16 @@ public class EmployeeActivity extends AppCompatActivity {
                     clinicTable.removeAllViews();
                     clinicTable.addView(getLayoutInflater().inflate(R.layout.employee_clinic_header, clinicTable, false));
 
+                    LayoutInflater layoutInflater = getLayoutInflater();
+
                     int i = 0;
                     for (DocumentSnapshot document : result) {
                         final Clinic clinic = document.toObject(Clinic.class);
                         clinic.setId(document.getId());
 
+
 //                        Log.d(TAG, clinic.toString());
 
-                        LayoutInflater layoutInflater = getLayoutInflater();
 
                         TableRow row = (TableRow) layoutInflater.inflate(R.layout.employee_clinic_row, clinicTable, false);
                         row.setId(i);
@@ -90,7 +93,7 @@ public class EmployeeActivity extends AppCompatActivity {
                                 Intent returnIntent = new Intent(clinicTable.getContext(), EmployeeEditClinicActivity.class);
 
                                 returnIntent.putExtra("clinic", clinic);
-                                
+
                                 startActivity(returnIntent);
                             }
                         });
@@ -99,11 +102,20 @@ public class EmployeeActivity extends AppCompatActivity {
                             row.setBackgroundColor(Util.ROW_BG_COLOR);
                         }
 
+                        double rating = clinic.getRating().getRating();
+                        List<String> reviews = clinic.getReviews();
                         String name = clinic.getName();
                         String address = clinic.getAddress();
                         String phone = clinic.getPhone();
                         ArrayList<String> payments = (ArrayList<String>) clinic.getPayments();
                         ArrayList<String> services = (ArrayList<String>) clinic.getServices();
+
+                        TextView ratingCol = (TextView) layoutInflater.inflate(R.layout.employee_clinic_column, row, false);
+                        if (rating < 0) ratingCol.setText("N/A");
+                        else ratingCol.setText(String.format("%.1f", rating));
+
+                        TextView reviewsCol = (TextView) layoutInflater.inflate(R.layout.employee_clinic_column, row, false);
+                        reviewsCol.setText(String.valueOf(reviews.size()));
 
                         TextView nameCol = (TextView) layoutInflater.inflate(R.layout.employee_clinic_column, row, false);
                         nameCol.setText(name);
@@ -128,6 +140,8 @@ public class EmployeeActivity extends AppCompatActivity {
                         servicesCol.setText(String.valueOf(services.size()));
 
                         row.addView(nameCol);
+                        row.addView(ratingCol);
+                        row.addView(reviewsCol);
                         row.addView(addressCol);
                         row.addView(phoneCol);
                         row.addView(paymentsCol);

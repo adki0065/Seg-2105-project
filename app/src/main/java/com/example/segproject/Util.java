@@ -1,12 +1,21 @@
 package com.example.segproject;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class Util {
+    final static String TAG = "UtilLog";
+
     static public int ROW_BG_COLOR = 671088640;
 
     static public void ShowSnackbar(View view, String text, int color) {
@@ -78,6 +87,33 @@ public class Util {
             return "Address is required.";
         else if (address.length() < 4 || address.length() > 100)
             return "Address must be between 4 and 100 characters.";
+
+        return null;
+    }
+
+    static public String ValidateReview(String review) {
+        if (review.isEmpty())
+            return "Review is required.";
+        else if (review.length() > 1000)
+            return "Review must be less than 1000 characters.";
+
+        return null;
+    }
+
+    static public String ValidateDate(int year, int month, int day, int hour, int minute) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.CANADA);
+
+        Date date;
+        try {
+            date = sdf.parse(String.format("%d/%d/%d %d:%d", year, month, day, hour, minute));
+        } catch (ParseException error) {
+            return "Couldn't parse the time.";
+        }
+
+        long currentMillis = System.currentTimeMillis();
+        long millis = date.getTime();
+
+        if (millis < currentMillis) return "Date and time selected cannot be in the past";
 
         return null;
     }

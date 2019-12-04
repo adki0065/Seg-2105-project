@@ -2,11 +2,15 @@ package com.example.segproject;
 
 import androidx.annotation.NonNull;
 
-public class ClinicRating {
+import java.io.Serializable;
+
+public class ClinicRating implements Serializable {
     public double rating;
     public int total;
 
     public ClinicRating() {
+        rating = -1;
+        total = -1;
     }
 
     public ClinicRating(double rating, int total) {

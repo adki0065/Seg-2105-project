@@ -19,11 +19,40 @@ public class Clinic implements Serializable {
     public List<String> payments;
     public List<String> services;
     public Map<String, ClinicHours> hours;
+    public ClinicRating rating;
+    public List<String> reviews;
+    public int waitTime;
 
     public Clinic() {
         this.payments = new ArrayList<>();
         this.services = new ArrayList<>();
         this.hours = new HashMap<>();
+        this.rating = new ClinicRating();
+        this.reviews = new ArrayList<>();
+    }
+
+    public int getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public ClinicRating getRating() {
+        return rating;
+    }
+
+    public void setRating(ClinicRating rating) {
+        this.rating = rating;
+    }
+
+    public List<String> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<String> reviews) {
+        this.reviews = reviews;
     }
 
     public Map<String, ClinicHours> getHours() {
@@ -96,7 +125,9 @@ public class Clinic implements Serializable {
 
         sb.append("payments=" + payments.toString() + ", ");
         sb.append("services=" + services.toString() + ", ");
-        sb.append("hours=" + hours.toString());
+        sb.append("hours=" + hours.toString() + ", ");
+        sb.append("rating=" + rating.toString() + ", ");
+        sb.append("reviews=" + reviews.toString());
 
         sb.append("}");
 

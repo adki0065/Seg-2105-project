@@ -40,9 +40,6 @@ public class PatientSearchResultActivity extends AppCompatActivity {
 
     private TableLayout clinicTable;
 
-    private FirebaseFirestore db;
-    private CollectionReference clinicsRef;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +47,6 @@ public class PatientSearchResultActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         results = (ArrayList<Clinic>) intent.getSerializableExtra("results");
-
-        db = FirebaseFirestore.getInstance();
-        clinicsRef = db.collection("clinics");
 
         clinicTable = (TableLayout) findViewById(R.id.employee_clinic_table);
 
@@ -69,99 +63,12 @@ public class PatientSearchResultActivity extends AppCompatActivity {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    View dialogView = layoutInflater.inflate(R.layout.patient_clinic_dialog, null);
-                    builder.setView(dialogView);
+                    Intent intent = new Intent(PatientSearchResultActivity.this, PatientClinicActivity.class);
 
-                    builder.setTitle("Leave a review");
+                    intent.putExtra("clinic", clinic);
 
-                    builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    });
+                    startActivity(intent);
 
-                    builder.setPositiveButton("Add", null);
-
-                    final AlertDialog dialog = builder.create();
-
-                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            final RatingBar ratingField = dialog.findViewById(R.id.rating_bar);
-                            final EditText reviewField = dialog.findViewById(R.id.review_edit_text);
-
-                            Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                            button.setOnClickListener(new View.OnClickListener() {
-
-                                @Override
-                                public void onClick(final View v) {
-                                    final double rating = ratingField.getRating();
-                                    final String review = reviewField.getText().toString().trim();
-
-
-                                    clinicsRef.document(clinic.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot document = task.getResult();
-
-                                                if (document.exists()) {
-                                                    List<String> reviews = (ArrayList<String>) document.get("reviews");
-
-                                                    if (reviews == null)
-                                                        reviews = new ArrayList<>(1);
-
-                                                    reviews.add(review);
-
-                                                    ClinicRating prevRating = document.get("rating", ClinicRating.class);
-
-                                                    if (prevRating == null)
-                                                        prevRating = new ClinicRating(rating, 1);
-                                                    else {
-                                                        double ratingAvg = prevRating.getRating(); // 5
-                                                        int ratingTotal = prevRating.getTotal(); // 1
-
-                                                        double newTotal = ratingTotal + 1; // 2
-                                                        double newAvg = (ratingAvg * ratingTotal + rating) / newTotal;
-
-
-                                                        prevRating = new ClinicRating(newAvg, ratingTotal + 1);
-                                                    }
-
-                                                    Map<String, Object> data = new HashMap<>();
-                                                    data.put("rating", prevRating);
-                                                    data.put("reviews", reviews);
-
-                                                    clinicsRef.document(clinic.getId()).update(data)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    dialog.dismiss();
-                                                                    Log.d(TAG, "Updated clinic with ID: " + clinic.getId());
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception err) {
-                                                                    Util.ShowToast(v, "Couldn't add review");
-                                                                    Log.e(TAG, "Error adding clinic", err);
-                                                                }
-                                                            });
-
-                                                }
-                                            } else {
-                                                Util.ShowToast(v, "Couldn't add review");
-                                                Log.e(TAG, "Error adding clinic", task.getException());
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-
-                    dialog.show();
                 }
             });
 
@@ -169,11 +76,20 @@ public class PatientSearchResultActivity extends AppCompatActivity {
                 row.setBackgroundColor(Util.ROW_BG_COLOR);
             }
 
+            double rating = clinic.getRating().getRating();
+            List<String> reviews = clinic.getReviews();
             String name = clinic.getName();
             String address = clinic.getAddress();
             String phone = clinic.getPhone();
             ArrayList<String> payments = (ArrayList<String>) clinic.getPayments();
             ArrayList<String> services = (ArrayList<String>) clinic.getServices();
+
+            TextView ratingCol = (TextView) layoutInflater.inflate(R.layout.employee_clinic_column, row, false);
+            if (rating < 0) ratingCol.setText("N/A");
+            else ratingCol.setText(String.format("%.1f", rating));
+
+            TextView reviewsCol = (TextView) layoutInflater.inflate(R.layout.employee_clinic_column, row, false);
+            reviewsCol.setText(String.valueOf(reviews.size()));
 
             TextView nameCol = (TextView) layoutInflater.inflate(R.layout.employee_clinic_column, row, false);
             nameCol.setText(name);
@@ -198,6 +114,8 @@ public class PatientSearchResultActivity extends AppCompatActivity {
             servicesCol.setText(String.valueOf(services.size()));
 
             row.addView(nameCol);
+            row.addView(ratingCol);
+            row.addView(reviewsCol);
             row.addView(addressCol);
             row.addView(phoneCol);
             row.addView(paymentsCol);
