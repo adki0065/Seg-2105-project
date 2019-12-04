@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TableLayout;
@@ -92,6 +93,69 @@ public class PatientClinicActivity extends AppCompatActivity {
         clinicWait.setText(clinic.getWaitTime() + " min");
     }
 
+    public void OnViewReviewsPress(final View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.patient_clinic_service_dialog, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Clinic reviews");
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                LayoutInflater layoutInflater = getLayoutInflater();
+
+                TableLayout tableLayout = (TableLayout) dialog.findViewById(R.id.serviceTable);
+                tableLayout.removeAllViews();
+
+                List<String> reviews = clinic.getReviews();
+
+                if (reviews.size() == 0) {
+                    TableRow row = (TableRow) layoutInflater.inflate(R.layout.clinic_services_row, tableLayout, false);
+                    row.setId(0);
+
+                    TextView noReviewCol = (TextView) layoutInflater.inflate(R.layout.clinic_services_column, row, false);
+                    noReviewCol.setText("This clinic doesn't have any reviews");
+
+                    row.addView(noReviewCol);
+
+                    tableLayout.addView(row);
+
+                    return;
+                }
+
+                int i = 1;
+                for (String review : clinic.getReviews()) {
+                    TableRow row = (TableRow) layoutInflater.inflate(R.layout.clinic_services_row, tableLayout, false);
+                    row.setId(i);
+
+                    if (i % 2 == 0) {
+                        row.setBackgroundColor(Util.ROW_BG_COLOR);
+                    }
+
+                    TextView reviewCol = (TextView) layoutInflater.inflate(R.layout.clinic_services_column, row, false);
+                    reviewCol.setText(review);
+
+                    row.addView(reviewCol);
+
+                    tableLayout.addView(row);
+
+                    i++;
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
     public void OnViewServicesPress(final View view) {
         final List<String> serviceIDs = clinic.getServices();
 
@@ -124,8 +188,6 @@ public class PatientClinicActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void showServicesDialog(View view) {
@@ -150,6 +212,20 @@ public class PatientClinicActivity extends AppCompatActivity {
 
                 TableLayout tableLayout = (TableLayout) dialog.findViewById(R.id.serviceTable);
                 tableLayout.removeAllViews();
+
+                if (services.size() == 0) {
+                    TableRow row = (TableRow) layoutInflater.inflate(R.layout.clinic_services_row, tableLayout, false);
+                    row.setId(0);
+
+                    TextView noServicesCol = (TextView) layoutInflater.inflate(R.layout.clinic_services_column, row, false);
+                    noServicesCol.setText("This clinic doesn't have any services");
+
+                    row.addView(noServicesCol);
+                    tableLayout.addView(row);
+
+                    return;
+                }
+
                 tableLayout.addView(layoutInflater.inflate(R.layout.patient_clinic_service_header, tableLayout, false));
 
                 int i = 0;
@@ -167,7 +243,7 @@ public class PatientClinicActivity extends AppCompatActivity {
 
                     String role = service.getRole();
                     TextView roleCol = (TextView) layoutInflater.inflate(R.layout.clinic_services_column, row, false);
-                    nameCol.setText(role);
+                    roleCol.setText(role);
 
                     row.addView(nameCol);
                     row.addView(roleCol);
@@ -175,6 +251,45 @@ public class PatientClinicActivity extends AppCompatActivity {
                     tableLayout.addView(row);
 
                     i++;
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void OnViewHoursPress(final View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.patient_clinic_hours_dialog, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Clinic services");
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Map<String, ClinicHours> hours =  clinic.getHours();
+
+                for (String day : hours.keySet()) {
+                    ClinicHours schedule = hours.get(day);
+
+                    int[] buttonsID = EmployeeEditClinicActivity.getHourButtonsID(day);
+
+                    TextView startButton = dialog.findViewById(buttonsID[0]);
+                    startButton.setEnabled(true);
+                    startButton.setText(schedule.getStart());
+
+                    TextView endButton = dialog.findViewById(buttonsID[1]);
+                    endButton.setEnabled(true);
+                    endButton.setText(schedule.getEnd());
                 }
             }
         });

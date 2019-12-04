@@ -359,35 +359,11 @@ public class EmployeeEditClinicActivity extends AppCompatActivity {
         dialog.show();
 
         for (String key : schedule.keySet()) {
-            int checkID;
-
-            switch (key) {
-                case "monday":
-                    checkID = R.id.check_monday;
-                    break;
-                case "tuesday":
-                    checkID = R.id.check_tuesday;
-                    break;
-                case "wednesday":
-                    checkID = R.id.check_wednesday;
-                    break;
-                case "thursday":
-                    checkID = R.id.check_thursday;
-                    break;
-                case "friday":
-                    checkID = R.id.check_friday;
-                    break;
-                case "saturday":
-                    checkID = R.id.check_saturday;
-                    break;
-                default:
-                    checkID = R.id.check_sunday;
-                    break;
-            }
+            int checkID = getHourCheckID(key);
 
             ((CheckBox) dialog.findViewById(checkID)).setChecked(true);
 
-            int[] buttonsID = getButtonsID(key);
+            int[] buttonsID = getHourButtonsID(key);
             int startButtonID = buttonsID[0];
             int endButtonID = buttonsID[1];
 
@@ -479,7 +455,7 @@ public class EmployeeEditClinicActivity extends AppCompatActivity {
 
         String day = check.getTag().toString();
 
-        int[] buttonsID = getButtonsID(day);
+        int[] buttonsID = getHourButtonsID(day);
         int startButtonID = buttonsID[0];
         int endButtonID = buttonsID[1];
 
@@ -632,7 +608,37 @@ public class EmployeeEditClinicActivity extends AppCompatActivity {
                 });
     }
 
-    private int[] getButtonsID(String day) {
+    public static int getHourCheckID(String day) {
+        int checkID;
+
+        switch (day) {
+            case "monday":
+                checkID = R.id.check_monday;
+                break;
+            case "tuesday":
+                checkID = R.id.check_tuesday;
+                break;
+            case "wednesday":
+                checkID = R.id.check_wednesday;
+                break;
+            case "thursday":
+                checkID = R.id.check_thursday;
+                break;
+            case "friday":
+                checkID = R.id.check_friday;
+                break;
+            case "saturday":
+                checkID = R.id.check_saturday;
+                break;
+            default:
+                checkID = R.id.check_sunday;
+                break;
+        }
+
+        return checkID;
+    }
+
+    public static int[] getHourButtonsID(String day) {
         int startButtonID;
         int endButtonID;
         switch (day) {

@@ -36,14 +36,15 @@ public class ClinicService {
     ClinicService() {
     }
 
-    ClinicService(String name) {
-        setName(name);
+    ClinicService(String name, String role) {
+        this.name = name;
+        this.role = role;
     }
 
 
     @NonNull
     @Override
     public String toString() {
-        return "[id=\"" + id + "\", name=\"" + name + "\"]";
+        return "{id=\"" + id + "\", name=\"" + name + "\", role=\"" + role + "\"}";
     }
 }

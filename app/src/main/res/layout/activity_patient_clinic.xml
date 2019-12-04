@@ -204,6 +204,7 @@
 
                 <Button
                     android:id="@+id/clinic_reviews_button"
+                    android:onClick="OnViewReviewsPress"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
@@ -258,6 +259,7 @@
                     android:textSize="12sp" />
 
                 <Button
+                    android:onClick="OnViewHoursPress"
                     android:id="@+id/clinic_hours_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
