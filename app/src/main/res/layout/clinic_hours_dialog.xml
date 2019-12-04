@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp">
@@ -27,23 +28,23 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/monday_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/monday_start"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/monday_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/monday_end"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -69,23 +70,23 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/tuesday_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/tuesday_start"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/tuesday_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/tuesday_end"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -111,23 +112,23 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/wednesday_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/wednesday_start"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/wednesday_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/wednesday_end"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -153,23 +154,23 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/thursday_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/thursday_start"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/thursday_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/thursday_end"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -195,23 +196,23 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/friday_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/friday_start"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/friday_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/friday_end"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -237,23 +238,23 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/saturday_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/saturday_start"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/saturday_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/saturday_end"
-            android:text="Closed"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
+            android:text="Closed"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -279,22 +280,22 @@
             android:textSize="12sp" />
 
         <Button
+            android:id="@+id/sunday_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:onClick="OnSetDayHours"
-            android:id="@+id/sunday_start"
             android:enabled="false"
+            android:onClick="OnSetDayHours"
             android:text="Closed"
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/sunday_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:enabled="false"
             android:onClick="OnSetDayHours"
-            android:id="@+id/sunday_end"
             android:text="Closed"
             android:textSize="10sp" />
 
