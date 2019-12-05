@@ -40,4 +40,56 @@ public class ExampleUnitTest {
     public void roleNotEmpty() throws Exception {
         assertNotNull(R.id.toggleButton);
     }
+
+    /*Deliverable 4 Unit Test Cases*/
+
+    @Test
+    public void ratingBarNotEmpty()throws Exception {
+        assertNotNull(R.id.rating_bar);
+    }
+
+    @Test
+    public void timeNotEmpty()throws Exception {
+        assertNotNull(R.id.time_picker);
+    }
+
+    @Test
+    public void dateNotEmpty()throws Exception {
+        assertNotNull(R.id.date_picker);
+    }
+
+    @Test
+    public void canReview()throws Exception {
+        assertNotNull(R.id.edit_clinic_button);
+    }
+
+    @Test
+    public void canViewReviews()throws Exception {
+        assertNotNull(R.id.clinic_reviews_button);
+    }
+
+    @Test
+    public void canBookAppointment()throws Exception {
+        assertNotNull(R.id.delete_clinic_button);
+    }
+
+    @Test
+    public void searchWaitTimeNotEmpty()throws Exception {
+        assertNotNull(R.id.clinic_wait_time);
+    }
+
+    @Test
+    public void searchAddressNotEmpty()throws Exception {
+        assertNotNull(R.id.clinic_address);
+    }
+
+    @Test
+    public void searchPhoneNumberNotEmpty()throws Exception {
+        assertNotNull(R.id.clinic_phone);
+    }
+
+    @Test
+    public void searchClinicNameNotEmpty()throws Exception {
+        assertNotNull(R.id.clinic_title);
+    }
 }
