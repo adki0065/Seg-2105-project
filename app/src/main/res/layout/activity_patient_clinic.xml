@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PatientClinicActivity"
-    android:background="@color/colorPrimary">
+    tools:context=".PatientClinicActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -205,6 +204,7 @@
 
                 <Button
                     android:id="@+id/clinic_reviews_button"
+                    android:onClick="OnViewReviewsPress"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
@@ -259,6 +259,7 @@
                     android:textSize="12sp" />
 
                 <Button
+                    android:onClick="OnViewHoursPress"
                     android:id="@+id/clinic_hours_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
