@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoggedInActivity">
-    <!--    android:background="@drawable/gradient"-->
+    tools:context=".LoggedInActivity"
+    android:background="@color/colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.40"
+                    android:layout_weight="0.25"
                     android:gravity="center_vertical"
                     android:paddingLeft="16dp"
                     android:text="Name:"
@@ -44,7 +44,7 @@
                     android:id="@+id/clinic_name_field"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.55"
+                    android:layout_weight="0.70"
                     android:hint="Clinic name" />
 
                 <Space
@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.40"
+                    android:layout_weight="0.25"
                     android:gravity="center_vertical"
                     android:paddingLeft="16dp"
                     android:text="Address:"
@@ -70,7 +70,7 @@
                     android:id="@+id/clinic_address_field"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.55"
+                    android:layout_weight="0.70"
                     android:hint="Clinic address" />
 
                 <Space
@@ -79,59 +79,7 @@
                     android:layout_weight="0.05" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.40"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="16dp"
-                    android:text="Type of service:"
-                    android:textSize="12sp" />
-
-                <Spinner
-                    android:id="@+id/serviceRoleSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.55" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.05" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.40"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="16dp"
-                    android:text="Payments accepted:"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/payment_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.55"
-                    android:onClick="OnSelectPayments"
-                    android:text="Select payments" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.05" />
-            </LinearLayout>
-
-            <!--            <LinearLayout-->
+<!--            <LinearLayout-->
             <!--                android:layout_width="match_parent"-->
             <!--                android:layout_height="50dp">-->
 
@@ -158,31 +106,31 @@
             <!--                    android:layout_weight="0.05" />-->
             <!--            </LinearLayout>-->
 
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="50dp">-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp">-->
 
-            <!--                <TextView-->
-            <!--                    android:layout_width="0dp"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:layout_weight="0.25"-->
-            <!--                    android:gravity="center_vertical"-->
-            <!--                    android:paddingLeft="16dp"-->
-            <!--                    android:text="Services:"-->
-            <!--                    android:textSize="12sp" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="0.25"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:paddingLeft="16dp"-->
+<!--                    android:text="Services:"-->
+<!--                    android:textSize="12sp" />-->
 
-            <!--                <Button-->
-            <!--                    android:layout_width="0dp"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:layout_weight="0.70"-->
-            <!--                    android:text="Select services"-->
-            <!--                    android:textSize="10sp" />-->
+<!--                <Button-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="0.70"-->
+<!--                    android:text="Select services"-->
+<!--                    android:textSize="10sp" />-->
 
-            <!--                <Space-->
-            <!--                    android:layout_width="0dp"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:layout_weight="0.05" />-->
-            <!--            </LinearLayout>-->
+<!--                <Space-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="0.05" />-->
+<!--            </LinearLayout>-->
 
             <!--            <LinearLayout-->
             <!--                android:layout_width="match_parent"-->
