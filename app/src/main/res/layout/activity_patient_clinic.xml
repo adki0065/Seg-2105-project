@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".PatientClinicActivity">
 
     <LinearLayout
@@ -204,10 +205,10 @@
 
                 <Button
                     android:id="@+id/clinic_reviews_button"
-                    android:onClick="OnViewReviewsPress"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
+                    android:onClick="OnViewReviewsPress"
                     android:text="View reviews"
                     android:textSize="10sp" />
 
@@ -232,10 +233,10 @@
 
                 <Button
                     android:id="@+id/clinic_payments_button"
-                    android:onClick="OnViewServicesPress"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
+                    android:onClick="OnViewServicesPress"
                     android:text="View services"
                     android:textSize="10sp" />
 
@@ -259,11 +260,11 @@
                     android:textSize="12sp" />
 
                 <Button
-                    android:onClick="OnViewHoursPress"
                     android:id="@+id/clinic_hours_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.70"
+                    android:onClick="OnViewHoursPress"
                     android:text="View hours"
                     android:textSize="10sp" />
 
@@ -295,10 +296,10 @@
 
             <Button
                 android:id="@+id/delete_clinic_button"
-                android:onClick="OnBookPress"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
+                android:onClick="OnBookPress"
                 android:text="Book an appointment" />
 
             <Space
